@@ -233,7 +233,7 @@ To see the events from the objectCounter module and from the Live Video Analytic
 
 1. Next, under the **GraphInstanceSet** and **GraphTopologyDelete** nodes, edit:
 
-    `"topologyName" : "EVRtoAssetsOnObjDetect"`
+    `"topologyName" : "EVRtoAssetsOnObjDetectAndToFilesOnMotion"`
     
 1. Start a debugging session by selecting F5. You'll see some messages printed in the **TERMINAL** window.
 1. The operations.json file starts off with calls to GraphTopologyList and GraphInstanceList. If you've cleaned up resources after previous quickstarts or tutorials, this action returns empty lists and pauses for you to select **Enter**, as shown:
