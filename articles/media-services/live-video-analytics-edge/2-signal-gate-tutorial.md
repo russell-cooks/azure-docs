@@ -1,13 +1,13 @@
 ---
-title: Two signal gate event-based video recording to your edge devices's file system and the cloud - Azure
-description: In this tutorial, you'll learn how to use Azure Live Video Analytics on Azure IoT Edge to record an event-based video recording to the cloud and play it back from the cloud.
+title: Two signal gate event-based video recording to your Edge devices's file system and the cloud - Azure
+description: In this tutorial, you'll learn how to use Azure Live Video Analytics on Azure IoT Edge to record an event-based video recording to the cloud and your Edge device's file system.
 ms.topic: tutorial
 ms.date: 1/29/2021
 
 ---
-# Tutorial: Two signal gate event-based video recording to your edge device's file system and the cloud.
+# Tutorial: Two signal gate event-based video recording to your Edge device's file system and the cloud.
 
-In this tutorial, you’ll learn how use Azure Live Video Analytics on Azure IoT Edge to selectively record portions of a live video source to your edge device’s file system and Azure Media Services in the cloud.
+In this tutorial, you’ll learn how use Azure Live Video Analytics on Azure IoT Edge to selectively record portions of a live video source to your Edge device’s file system and Azure Media Services in the cloud.
 
 In this tutorial, you will:
 
@@ -61,7 +61,7 @@ Event-based video recording refers to the process of recording video triggered b
 - An independent source, for example, the opening of a door. 
 
 Alternatively, you can trigger recording only when an inferencing service detects that a specific event has occurred. In this tutorial, you'll use a video of a person walking and vehicles moving on a freeway and record video clips whenever a person is detected and whenever motion is detected.
-To record video clips with two different triggers, object detection and motion detection, to two different locations, your edge device and the cloud, you will need to use two signal gates.
+To record video clips with two different triggers, object detection and motion detection, to two different locations, your Edge device and the cloud, you will need to use two signal gates.
 
 > [!NOTE]
 > [LVA 2.0](upgrading-lva-module.md) is required to complete this tutorial.
@@ -81,7 +81,7 @@ As the diagram shows, you'll use an [RTSP source](media-graph-concept.md#rtsp-so
 * The first path is to a HTTP extension node. The node samples the video frames to a value set by you using the samplingOptions field and then relays the frames, as images, to the AI module YOLOv3, which is an object detector. The node receives the results, which are the objects (people) detected by the model. The HTTP extension node then publishes the results via the IoT Hub message sink node to the IoT Edge hub.
 * The second path is to a signal gate processor that is triggered by the IoT Hub source node, which receives messages from the IoT Edge hub, which received messages from the objectCounter module. The objectCounter module is set up to receive messages from the IoT Edge hub, which include the object detection results (vehicles in traffic). The module checks these messages and looks for objects of a certain type, which were configured via a setting. When such an object is found, this module sends a message to the IoT Edge hub. Those "object found" messages are then routed to the IoT Hub source node of the media graph. Upon receiving such a message, the IoT Hub source node in the media graph triggers the signal gate processor node. The signal gate processor node then opens for a configured amount of time. Video flows through the gate to the asset sink node for that duration. That portion of the live stream is then recorded via the asset sink node to an asset in your Azure Media Services account.
 * The third path is to a motion detection processor node. This node examines the incoming video frames and determines if there is motion in the video. If motion is detected, the node then triggers the signal gate processor.
-* The fourth path is to a signal gate processor. This signal gate processor receives video frames from the RTSP source, and once the signal gate is triggered by the motion detection process, it passes the video frames to the file sink node. That portion of the live stream is then recorded via the file sink node to the file system on your edge device.
+* The fourth path is to a signal gate processor. This signal gate processor receives video frames from the RTSP source, and once the signal gate is triggered by the motion detection process, it passes the video frames to the file sink node. That portion of the live stream is then recorded via the file sink node to the file system on your Edge device.
 
 ## Set up your development environment
 
@@ -92,7 +92,7 @@ Before you begin, check that you completed the third bullet in [Prerequisites](#
 
 Of interest in this tutorial are the files:
 
-* **~/clouddrive/lva-sample/edge-deployment/.env**: Contains properties that Visual Studio Code uses to deploy modules to an edge device.
+* **~/clouddrive/lva-sample/edge-deployment/.env**: Contains properties that Visual Studio Code uses to deploy modules to an Edge device.
 * **~/clouddrive/lva-sample/appsetting.json**: Used by Visual Studio Code for running the sample code.
 
 You'll need the files for these steps.
@@ -134,7 +134,7 @@ You'll need the files for these steps.
 
 In the previous step, you started Visual Studio Code and opened the folder that contains the sample code.
 
-In Visual Studio Code, browse to src/edge. You'll see the .env file that you created and a few deployment template files. This template defines which edge modules you'll deploy to the edge device (the Azure Linux VM). The .env file contains values for the variables used in these templates, such as the Media Services credentials.
+In Visual Studio Code, browse to src/edge. You'll see the .env file that you created and a few deployment template files. This template defines which edge modules you'll deploy to the Edge device (the Azure Linux VM). The .env file contains values for the variables used in these templates, such as the Media Services credentials.
 
 Open src/edge/deployment.objectCounter.template.json. There are four entries under the **modules** section that correspond to the items listed in the previous "Concepts" section:
 
@@ -156,7 +156,7 @@ Read [this section](../../iot-edge/module-composition.md#declare-routes) on how 
 
 ## Generate and deploy the IoT Edge deployment manifest 
 
-The deployment manifest defines what modules are deployed to an edge device and the configuration settings for those modules. Follow these steps to generate a manifest from the template file, and then deploy it to the edge device.
+The deployment manifest defines what modules are deployed to an Edge device and the configuration settings for those modules. Follow these steps to generate a manifest from the template file, and then deploy it to the Edge device.
 
 Ensure that you are using LVA 2.0, go to src/edge/deployment.objectCounter.amd64.json. Under the "lvaEdge" module, edit the following:
 `"image": "mcr.microsoft.com/media/live-video-analytics:2"`
@@ -447,7 +447,7 @@ You can examine the Media Services asset that was created by the graph by loggin
 > Because the source of the video was a container simulating a camera feed, the time stamps in the video are related to when you activated the graph instance and when you deactivated it. If you use the playback controls built into the [Playback of multi-day recordings](playback-multi-day-recordings-tutorial.md) tutorial, you can see the time stamps in the video displayed onscreen.
 
 ## Play MP4 clip from edge device's file system
-The MP4 files are written to a directory on the edge device that you configured in the *.env* file by using the OUTPUT_VIDEO_FOLDER_ON_DEVICE key. If you used the default value, then the results should be in the */var/media/* folder.
+The MP4 files are written to a directory on the Edge device that you configured in the *.env* file by using the OUTPUT_VIDEO_FOLDER_ON_DEVICE key. If you used the default value, then the results should be in the */var/media/* folder.
 
 To play the MP4 clip:
 
